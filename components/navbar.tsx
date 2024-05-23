@@ -12,7 +12,6 @@ const Navbar = async () => {
   const data = await getHero();
   const storeName = data[0]?.label;
   const storeLogo = data[0]?.logoUrl;
-
   // console.log("HERO DATA~~~~~~~~", data);
   return (
     <div className="border-b">
