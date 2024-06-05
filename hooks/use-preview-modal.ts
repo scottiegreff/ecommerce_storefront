@@ -1,18 +1,18 @@
 import { create } from 'zustand';
 
-import { Product } from '@/types';
+import { Product, Service } from '@/types';
 
 interface PreviewModalStore {
   isOpen: boolean;
-  data?: Product;
-  onOpen: (data: Product) => void;
+  data?: Product | Service;
+  onOpen: (data: Product | Service) => void;
   onClose: () => void;
 }
 
 const usePreviewModal = create<PreviewModalStore>((set) => ({
   isOpen: false,
   data: undefined,
-  onOpen: (data: Product) => set({ isOpen: true, data }),
+  onOpen: (data: Product | Service ) => set({ isOpen: true, data }),
   onClose: () => set({ isOpen: false }),
 }));
 

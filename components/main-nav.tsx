@@ -14,27 +14,47 @@ const MainNav: React.FC<MainNavProps> = ({
   data
 }) => {
   const pathname = usePathname();
+  
+  const goodsCategories = data.filter((category) => category.itemType === "GOODS");
+  const servicesCategories = data.filter((category) => category.itemType === "SERVICES");
 
-  const routes = data.map((route) => ({
-    href: `/category/${route.id}`,
+  const goodsRoutes = goodsCategories.map((route) => ({
+    href: `/goodsCategory/${route.id}`,
     label: route.name,
-    active: pathname === `/category/${route.id}`,
+    active: pathname === `/goodsCategory/${route.id}`,
+  }));
+  const servicesRoutes = servicesCategories.map((route) => ({
+    href: `/servicesCategory/${route.id}`,
+    label: route.name,
+    active: pathname === `/servicesCategory/${route.id}`,
   }));
 
   return (
     <nav
       className="mx-6 flex items-center space-x-4 lg:space-x-6"
     >
-      {routes.map((route) => (
+      {goodsRoutes.map((goodsRoute) => (
         <Link
-          key={route.href}
-          href={route.href}
+          key={goodsRoute.href}
+          href={goodsRoute.href}
           className={cn(
             'text-sm font-medium transition-colors hover:text-black',
-            route.active ? 'text-black' : 'text-neutral-500'
+            goodsRoute.active ? 'text-black' : 'text-neutral-500'
           )}
         >
-          {route.label}
+          {goodsRoute.label}
+      </Link>
+      ))}
+       {servicesRoutes.map((servicesRoute) => (
+        <Link
+          key={servicesRoute.href}
+          href={servicesRoute.href}
+          className={cn(
+            'text-sm font-medium transition-colors hover:text-black',
+            servicesRoute.active ? 'text-black' : 'text-neutral-500'
+          )}
+        >
+          {servicesRoute.label}
       </Link>
       ))}
     </nav>

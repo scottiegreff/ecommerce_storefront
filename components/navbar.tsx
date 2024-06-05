@@ -7,8 +7,11 @@ import getCategories from "@/actions/get-categories";
 import getHero from "@/actions/get-hero";
 import Image from "next/image";
 
+export const revalidate = 0;
+
 const Navbar = async () => {
   const categories = await getCategories();
+  // console.log("CATEGORIES DATA~~~~~~~~", categories);
   const data = await getHero();
   const storeName = data[0]?.label;
   const storeLogo = data[0]?.logoUrl;

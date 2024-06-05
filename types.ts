@@ -1,3 +1,41 @@
+export interface Billboard {
+  id: string;
+  label: string;
+  imageUrl: string;
+}
+export interface Booking {
+  id: string;
+  date:  Date;
+  startTime: number;
+  endTime: number;
+  serviceId: string;
+}
+export interface Category {
+  id: string;
+  name: string;
+  itemType: "GOODS" | "SERVICES";
+  billboard: Billboard;
+}
+export interface Color {
+  id: string;
+  name: string;
+  value: string;
+}
+export interface Employee {
+  id: string;
+  fName: string;
+  lName: string;
+}
+export interface Hero {
+  id: string;
+  label: string;
+  imageUrl: string;
+  logoUrl: string;
+}
+export interface Image {
+  id: string;
+  url: string;
+}
 export interface Product {
   id: string;
   category: Category;
@@ -8,38 +46,26 @@ export interface Product {
   color: Color;
   images: Image[];
 }
-
-export interface Image {
+export interface Service {
   id: string;
-  url: string;
-}
-
-export interface Hero {
-  id: string;
-  label: string;
-  imageUrl: string;
-  logoUrl: string;
-}
-export interface Billboard {
-  id: string;
-  label: string;
-  imageUrl: string;
-}
-
-export interface Category {
-  id: string;
+  category: Category;
   name: string;
-  billboard: Billboard;
+  description: string;
+  price: string;
+  isFeatured: boolean;
+  duration: number;
+  images: Image[];
+  bookings: Booking[];
 }
-
 export interface Size {
   id: string;
   name: string;
   value: string;
 }
-
-export interface Color {
+export interface Shift {
   id: string;
-  name: string;
-  value: string;
+  employeeId: string;
+  date: Date;
+  startTime: number;
+  endTime: number;
 }

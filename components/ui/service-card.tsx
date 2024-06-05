@@ -9,13 +9,13 @@ import Currency  from "@/components/ui/currency";
 import IconButton  from "@/components/ui/icon-button";
 import usePreviewModal from "@/hooks/use-preview-modal";
 import useCart from "@/hooks/use-cart";
-import { Product, Service } from "@/types";
+import { Service } from "@/types";
 
-interface ProductCard {
-  data: Product | Service
+interface ServiceCard {
+  data: Service 
 }
 
-const ProductCard: React.FC<ProductCard> = ({
+const ServiceCard: React.FC<ServiceCard> = ({
   data
 }) => {
   const previewModal = usePreviewModal();
@@ -23,13 +23,13 @@ const ProductCard: React.FC<ProductCard> = ({
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/product/${data?.id}`);
+    router.push(`/service/${data?.id}`);
   };
 
   const onPreview: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.stopPropagation();
 
-    previewModal.onOpen(data);
+    // previewModal.onOpen(data);
   };
 
   const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -49,18 +49,7 @@ const ProductCard: React.FC<ProductCard> = ({
           fill
           className="aspect-square object-cover rounded-md"
         />
-        <div className="opacity-0 group-hover:opacity-100 transition absolute w-full px-6 bottom-5">
-          <div className="flex gap-x-6 justify-center">
-            <IconButton 
-              onClick={onPreview} 
-              icon={<Expand size={20} className="text-gray-600" />}
-            />
-            <IconButton
-              onClick={onAddToCart} 
-              icon={<ShoppingCart size={20} className="text-gray-600" />} 
-            />
-          </div>
-        </div>
+
       </div>
       {/* Description */}
       <div>
@@ -75,4 +64,4 @@ const ProductCard: React.FC<ProductCard> = ({
   );
 }
 
-export default ProductCard;
+export default ServiceCard;

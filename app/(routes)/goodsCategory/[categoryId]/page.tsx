@@ -13,7 +13,7 @@ import MobileFilters from "./components/mobile-filters";
 
 export const revalidate = 0;
 
-interface CategoryPageProps {
+interface GoodsCategoryPageProps {
   params: {
     categoryId: string;
   };
@@ -23,7 +23,7 @@ interface CategoryPageProps {
   };
 }
 
-const CategoryPage: React.FC<CategoryPageProps> = async ({
+const GoodsCategoryPage: React.FC<GoodsCategoryPageProps> = async ({
   params,
   searchParams,
 }) => {
@@ -32,6 +32,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({
     colorId: searchParams.colorId,
     sizeId: searchParams.sizeId,
   });
+  // console.log("FROM GOODS", products);
 
   const sizes = await getSizes();
   const colors = await getColors();
@@ -64,4 +65,4 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({
   );
 };
 
-export default CategoryPage;
+export default GoodsCategoryPage;
