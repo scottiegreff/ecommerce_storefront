@@ -29,6 +29,7 @@ const BookingForm: React.FC = () => {
   const { serviceId, storeId } = useParams();
   const router = useRouter();
   const customerId = localStorage.getItem("customerId") || "";
+  const customerEmail = localStorage.getItem("customerEmail") || "";
   const [service, setService] = useState<Service>();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [employeeId, setEmployeeId] = useState("");
@@ -55,6 +56,7 @@ const BookingForm: React.FC = () => {
       employeeId: employeeId,
       customerId: customerId,
       shiftId: shift?.id,
+      email: customerEmail,
     };
     console.log("DATA: ", data);
     try {
@@ -67,8 +69,7 @@ const BookingForm: React.FC = () => {
         }
       );
       const responseData = await response.json(); // Access the response data
-      // router.refresh();
-      // router.push(`/${params.storeId}/bookings`);
+      router.refresh();
       toast.success(bookingToastMessage);
     } catch (error: any) {
       toast.error("Something went wrong.");
@@ -94,6 +95,7 @@ const BookingForm: React.FC = () => {
   }
 
   useEffect(() => {
+    // Fetch employees and services from the API
     const employees = async () => {
       try {
         const response = await fetch(
@@ -121,6 +123,7 @@ const BookingForm: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // Fetch all shifts of employeeId from the API, and returns the shifts from today onwards, then setShifts.
     if (employeeId) {
       const shifts = async () => {
         try {
@@ -145,6 +148,7 @@ const BookingForm: React.FC = () => {
   }, [employeeId]);
 
   useEffect(() => {
+    // Fetch the existing bookings for the selected date/shift of employeeId.
     if (employeeId && date && shift) {
       const shifts = async () => {
         try {
@@ -199,6 +203,10 @@ const BookingForm: React.FC = () => {
     }
   }, [date]);
 
+
+  // Creates an array of available booking times based on the shift start and end times,
+  //  and the existing bookings of the selected date/shift.
+  //  The interval can be changed by changing the interval variable.
   function getAvailableBookingTimes(
     shiftStart: Date,
     shiftEnd: Date,
@@ -230,6 +238,7 @@ const BookingForm: React.FC = () => {
     return availableTimes;
   }
 
+  // Formats the time to a 24 hour format.
   function formatTime(dateString: string): number {
     const date: Date = new Date(dateString);
     let hours: number = date.getHours();
@@ -248,7 +257,7 @@ const BookingForm: React.FC = () => {
         </h2>
         <div className="md:grid md:grid-cols-2 gap-8">
           {/* EMPLOYEE ID */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 my-3 md:my-0">
             <label className="text-md font-light">Book Staff</label>
             <Select
               defaultValue={employeeId}
@@ -268,7 +277,7 @@ const BookingForm: React.FC = () => {
             </Select>
           </div>
           {/* DATE PICKER */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 my-3 md:my-0">
             <label className="text-md font-light">Booking Date</label>
             <Popover>
               <PopoverTrigger asChild>
@@ -316,7 +325,7 @@ const BookingForm: React.FC = () => {
             </Popover>
           </div>
           {/* START TIME */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 my-3 md:my-0">
             <label className="text-md font-light">Booking Time</label>
             <Select
               defaultValue={startTime?.toString()}
@@ -345,7 +354,7 @@ const BookingForm: React.FC = () => {
           <Button
             onClick={onSubmit}
             disabled={loading || !employeeId || !date || !shift || !startTime}
-            className="py-6 mt-10 w-[20vw] md:text-lg text-white bg-slate-700 shadow-lg"
+            className="py-6 mt-10 w-full md:w-[25vw] md:text-lg text-white bg-slate-700 shadow-lg"
           >
             {bookingAction}
           </Button>

@@ -1,5 +1,14 @@
 "use client";
 
+// import { sendMail } from '@/lib/emails/mailService';
+
+// const from: string = `${process.env.MAIL_USERNAME}`;
+// const to: string = '<to email id>';
+// const subject: string = '<subject>';
+// const mailTemplate: string = `<h1>Welcome to our store</h1>`;
+
+
+
 import { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -10,6 +19,7 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
@@ -21,33 +31,34 @@ import {
 } from "@/components/ui/form";
 import React from "react";
 
-const custFormSchema = z.object({
+const formSchema = z.object({
   custFName: z.string().min(2),
   custLName: z.string().min(2),
   email: z.string().email(),
   phone: z.string().min(7),
 });
 
-type CustFormValues = z.infer<typeof custFormSchema>;
+type FormValues = z.infer<typeof formSchema>;
 
 interface CustomerFormProps {
   onValueChange: (value: string) => void;
 }
-// }
 
 const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
   const params = useParams();
   const router = useRouter();
   const storeId = params.storeId;
   const [customerId, setCustomerId] = useState<string | undefined>(undefined);
+  const [customerEmail, setCustomerEmail] = useState<string | undefined>()
+  const [ customerConfirmEmail, setCustomerConfirmEmail ] = useState<string | undefined>()
 
   const [loading, setLoading] = useState(false);
 
-  const custToastMessage = "You are a Customer.";
-  const custAction = "Submit";
+  const toastMessage = "You are a Customer.";
+  const action = "Submit";
 
-  const custForm = useForm<CustFormValues>({
-    resolver: zodResolver(custFormSchema),
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       custFName: "",
       custLName: "",
@@ -56,7 +67,11 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
     },
   });
 
-  const onCustSubmit = async (data: CustFormValues) => {
+  const onSubmit = async (data: FormValues) => {
+    if (data.email !== customerConfirmEmail) {
+      toast.error("Emails do not match.");
+      return;
+    }
     try {
       setLoading(true);
       const response = await fetch(
@@ -69,9 +84,10 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
       const responseData = await response.json();
       // setCustomerId(responseData.id); // Set the customerId to the response data id
       localStorage.setItem("customerId", responseData.id);
+      localStorage.setItem("customerEmail", responseData.email);
       setCustomerId(responseData.id);
       onValueChange(responseData.id);
-      toast.success(custToastMessage);
+      toast.success(toastMessage);
     } catch (error: any) {
       toast.error("Something went wrong.");
     } finally {
@@ -95,18 +111,18 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
       </p>
       <Separator />
       {/* CUSTOMER FORM */}
-      <Form {...custForm}>
+      <Form {...form}>
         <form
-          onSubmit={custForm.handleSubmit(onCustSubmit)}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
           <div className="md:grid md:grid-cols-2 gap-8">
             {/* CUSTOMER FIRST NAME */}
             <FormField
-              control={custForm.control}
+              control={form.control}
               name="custFName"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="my-3 md:my-0">
                   <FormLabel className="text-md font-light">
                     First Name
                   </FormLabel>
@@ -120,10 +136,10 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
             />
             {/* CUSTOMER LAST NAME */}
             <FormField
-              control={custForm.control}
+              control={form.control}
               name="custLName"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="my-3 md:my-0">
                   <FormLabel className="text-md font-light">
                     Last Name
                   </FormLabel>
@@ -137,10 +153,10 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
             />
             {/* CUSTOMER EMAIL */}
             <FormField
-              control={custForm.control}
+              control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="my-3 md:my-0">
                   <FormLabel className="text-md font-light">Email</FormLabel>
                   <FormControl>
                     <Input placeholder="Email" {...field} />
@@ -149,12 +165,21 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
                 </FormItem>
               )}
             />
+            <div className="my-3 md:my-0">
+              <Label className="text-md font-light" htmlFor="">Confirm Email</Label>
+
+              <Input className="mt-2" 
+              type="email" id="email"
+               placeholder="Confirm Email" 
+               onChange={(e) => setCustomerConfirmEmail(e.target.value)}
+               />
+            </div>
             {/* CUSTOMER PHONE */}
             <FormField
-              control={custForm.control}
+              control={form.control}
               name="phone"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="my-3 md:my-0">
                   <FormLabel className="text-md font-light">Phone</FormLabel>
                   <FormControl>
                     <Input placeholder="Phone" {...field} />
@@ -170,7 +195,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
               className="py-6 mt-10 w-[20vw] md:text-lg text-white bg-slate-700 shadow-lg"
               type="submit"
             >
-              {custAction}
+              {action}
             </Button>
           </div>
         </form>

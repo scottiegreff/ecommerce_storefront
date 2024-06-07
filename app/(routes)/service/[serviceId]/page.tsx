@@ -28,17 +28,6 @@ const ServicePage: React.FC<ServicePageProps> = async ({ params }) => {
   if (!service) {
     return null;
   }
-  const employees = await getEmployees();
-  const shifts = await getShifts();
-  const filteredShifts = shifts.map((shift) => {
-    return {
-      id: shift.id,
-      employeeId: shift.employeeId,
-      date: shift.date,
-      startTime: shift.startTime,
-      endTime: shift.endTime,
-    };
-  });
 
   return (
     <div className="bg-white">
@@ -62,8 +51,6 @@ const ServicePage: React.FC<ServicePageProps> = async ({ params }) => {
           </div>
           <div className="my-10">
             <ServiceClient />
-            {/* <CustomerForm />
-            <BookingForm employees={employees} shifts={filteredShifts} /> */}
           </div>
           <hr />
           <ServiceList title="Related Items" items={suggestedServices} />
