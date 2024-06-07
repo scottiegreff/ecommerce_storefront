@@ -24,7 +24,6 @@ import {
 import { Booking, Employee, Service, Shift } from "@/types";
 import React from "react";
 
-
 const BookingForm: React.FC = () => {
   const { serviceId, storeId } = useParams();
   const router = useRouter();
@@ -203,34 +202,37 @@ const BookingForm: React.FC = () => {
     }
   }, [date]);
 
-
   // Creates an array of available booking times based on the shift start and end times,
   //  and the existing bookings of the selected date/shift.
   //  The interval can be changed by changing the interval variable.
   function getAvailableBookingTimes(
     shiftStart: Date,
     shiftEnd: Date,
-    bookedTimes: Date[]
+    bookedTimes: Date[],
+    service?: { duration?: number }
   ): Date[] {
     const availableTimes: Date[] = [];
     const interval = 15 * 60 * 1000; // 15 minutes in milliseconds
+    // Ensure appointmentDuration is defined and convert to milliseconds
     let appointmentDuration = service?.duration;
-    if (!appointmentDuration) {
-      return [];
-    }
-    appointmentDuration = appointmentDuration * 60 * 1000;
+
+    appointmentDuration = (appointmentDuration ?? 0) * 60 * 1000; // Convert minutes to milliseconds
     for (
       let time = new Date(shiftStart.getTime());
-      time.getTime() + appointmentDuration <= shiftEnd.getTime();
+      time.getTime() + (appointmentDuration ?? 60) <= shiftEnd.getTime();
       time.setTime(time.getTime() + interval)
     ) {
-      const appointmentEnd = new Date(time.getTime() + appointmentDuration);
-
+      const appointmentDuration = service?.duration;
+      const appointmentEnd = new Date(
+        time.getTime() + (appointmentDuration ?? 60)
+      );
+      // Check if the current time slot overlaps with any booked times
       const isBooked = bookedTimes.some((bookedTime) => {
-        const bookedEnd = new Date(bookedTime.getTime() + appointmentDuration);
+        const bookedEnd = new Date(
+          bookedTime.getTime() + (appointmentDuration ?? 60)
+        );
         return time < bookedEnd && appointmentEnd > bookedTime;
       });
-
       if (!isBooked) {
         availableTimes.push(new Date(time.getTime()));
       }
