@@ -3,7 +3,6 @@ import Billboard from "@/components/ui/billboard";
 import ServiceCard from "@/components/ui/service-card";
 import NoResults from "@/components/ui/no-results";
 import getCategory from "@/actions/get-category";
-import getShifts from "@/actions/get-shifts";
 
 import Filter from "./components/filter";
 import MobileFilters from "./components/mobile-filters";

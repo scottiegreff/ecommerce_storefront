@@ -1,14 +1,9 @@
 import ServiceList from "@/components/service-list";
-import Gallery from "@/components/gallery";
 import getServices from "@/actions/get-services";
 import Container from "@/components/ui/container";
 import React from "react";
-// import BookingForm from "@/components/booking-form";
-import getEmployees from "@/actions/get-employees";
-import getShifts from "@/actions/get-shifts";
 import getService from "@/actions/get-service";
-import { date } from "zod";
-import CustomerForm from "@/components/customer-form";
+
 import ServiceClient from "./components/client";
 
 export const revalidate = 0;
