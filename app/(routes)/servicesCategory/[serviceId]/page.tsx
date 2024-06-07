@@ -4,11 +4,8 @@ import ServiceCard from "@/components/ui/service-card";
 import NoResults from "@/components/ui/no-results";
 import getCategory from "@/actions/get-category";
 
-import Filter from "./components/filter";
-import MobileFilters from "./components/mobile-filters";
 import getServices from "@/actions/get-services";
-import { Category, Employee, Shift } from "@/types";
-import getEmployees from "@/actions/get-employees";
+
 
 export const revalidate = 0;
 

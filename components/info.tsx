@@ -4,11 +4,11 @@ import { ShoppingCart } from "lucide-react";
 
 import Currency  from "@/components/ui/currency";
 import { Button } from "@/components/ui/button";
-import { Product } from "@/types";
+import { Product, Service } from "@/types";
 import useCart from "@/hooks/use-cart";
 
 interface InfoProps {
-  data: Product
+  data: Product | Service
 };
 
 const Info: React.FC<InfoProps> = ({ data }) => {

@@ -54,6 +54,8 @@ export interface Service {
   price: string;
   isFeatured: boolean;
   duration: number;
+  color: Color;
+  size: Size;
   images: Image[];
   bookings: Booking[];
 }
