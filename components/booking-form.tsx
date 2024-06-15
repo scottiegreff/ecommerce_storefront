@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Booking, Employee, Service, Shift } from "@/types";
+import { BookingStartAndEnd, Employee, Service, Shift } from "@/types";
 import React from "react";
 
 const BookingForm: React.FC = () => {
@@ -30,28 +30,41 @@ const BookingForm: React.FC = () => {
   const customerId = localStorage.getItem("customerId") || "";
   const customerEmail = localStorage.getItem("customerEmail") || "";
   const [service, setService] = useState<Service>();
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>();
   const [employeeId, setEmployeeId] = useState("");
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [shift, setShift] = useState<Shift>();
   const [date, setDate] = useState<Date>();
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  let [bookingHours, setBookingHours] = useState<Date[] | undefined>([]);
-  const [shiftStart, setShiftStart] = useState<Date>();
-  const [shiftEnd, setShiftEnd] = useState<Date>();
-  const [bookingTimes, setBookingTimes] = useState<Date[]>();
-  const [startTime, setStartTime] = useState<Number>();
+  let [bookingHours, setBookingHours] = useState<Date[] | undefined>();
+  const [bookingStartDateAndTime, setBookingStartDateAndTime] =
+    useState<String>();
 
   const [loading, setLoading] = useState(false);
 
-  const bookingToastMessage = "Booking created.";
-  const bookingAction = "Book Appointment";
+  const toastMessage = "Booking created.";
+  const action = "Book Appointment";
 
   const onSubmit = async () => {
+    if (!employeeId) {
+      toast.error("Please select a staff member.");
+      return;
+    }
+    if (!date) {
+      toast.error("Please select a date.");
+      return;
+    }
+    if (!bookingStartDateAndTime) {
+      toast.error("Please select a time.");
+      return;
+    }
+    const startOfBooking = new Date(bookingStartDateAndTime as string); // Convert bookingStartDateAndTime to a string before assigning it to start
+    const endOfBooking = new Date(
+      startOfBooking.getTime() + (service?.duration ?? 0) * 60000
+    );
     const data = {
       serviceId: serviceId,
-      date: date,
-      startTime: startTime,
+      startOfBooking: startOfBooking,
+      endOfBooking: endOfBooking,
       employeeId: employeeId,
       customerId: customerId,
       shiftId: shift?.id,
@@ -61,15 +74,16 @@ const BookingForm: React.FC = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/bookingsStorePost`,
+        `${process.env.NEXT_PUBLIC_API_URL}/bookings`,
         {
           method: "POST",
           body: JSON.stringify(data),
         }
       );
       const responseData = await response.json(); // Access the response data
+      console.log("RESPONSE DATA: ", responseData);
       router.refresh();
-      toast.success(bookingToastMessage);
+      toast.success(toastMessage);
     } catch (error: any) {
       toast.error("Something went wrong.");
     } finally {
@@ -87,9 +101,11 @@ const BookingForm: React.FC = () => {
   // Function called from the date disabled attribute to check if the date is the same as the employeeId.
   // If the date is the same as the employeeId then the date is NOT disabled.
   function isDateSameAsEmployeeId(date: Date, shifts: Shift[]) {
-    // console.log("SHIFT.DATE: ", typeof(shifts[2]?.date), "- DATE: ", typeof(date));
+    // console.log("SHIFT.START SHIFT: ", shifts[0].startShift, "- DATE: ", date);
     return shifts?.some((shift) => {
-      return shift.date.toString() == date.toString();
+      let temp = new Date(shift.startShift);
+      temp.setHours(0, 0, 0, 0);
+      return temp.toString() == date.toString();
     });
   }
 
@@ -106,6 +122,7 @@ const BookingForm: React.FC = () => {
         console.error("There was an error!", error);
       }
     };
+    // Fetch the service from the API
     const service = async () => {
       try {
         const response = await fetch(
@@ -123,7 +140,7 @@ const BookingForm: React.FC = () => {
 
   useEffect(() => {
     // Fetch all shifts of employeeId from the API, and returns the shifts from today onwards, then setShifts.
-    if (employeeId) {
+    if (service && employeeId) {
       const shifts = async () => {
         try {
           const response = await fetch(
@@ -133,9 +150,11 @@ const BookingForm: React.FC = () => {
               body: JSON.stringify({ employeeId: employeeId }),
             }
           );
-          const data = await response.json();
-          data.forEach((item: any) => {
-            item.date = formatUTCtoLocalDate(item.date);
+          const data: Shift[] = await response.json();
+
+          data.forEach((item: Shift) => {
+            item.startShift = formatUTCtoLocalDate(item.startShift);
+            item.endShift = formatUTCtoLocalDate(item.endShift);
           });
           setShifts(data);
         } catch (error) {
@@ -147,110 +166,121 @@ const BookingForm: React.FC = () => {
   }, [employeeId]);
 
   useEffect(() => {
-    // Fetch the existing bookings for the selected date/shift of employeeId.
-    if (employeeId && date && shift) {
-      const shifts = async () => {
+    // this useEffect is used to gather data needed for the availableSlots function,
+    //  ultimately used for selecting the time of the booking
+    // get the shift the user selected, and setShift
+    if (service && employeeId && date) {
+      const shift = shifts.find((item) => {
+        let startShift = new Date(item.startShift);
+        startShift.setHours(0, 0, 0, 0);
+        return startShift.toString() == date.toString();
+      });
+      setShift(shift);
+
+      // set the shift start and end times
+      let startShift = "";
+      let endShift = "";
+      if (shift) {
+        startShift = shift.startShift.toString();
+        endShift = shift.endShift.toString();
+      }
+
+      const bookings = async () => {
         try {
           const response = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/bookingsStoreGet`,
             {
               method: "POST",
               body: JSON.stringify({
-                shiftId: shift.id,
+                shiftId: shift?.id,
                 employeeId: employeeId,
               }),
             }
           );
           const data = await response.json();
-          data.forEach((item: any) => {
-            item.date = new Date(
-              date.toLocaleString("en-US", { timeZone: "America/Vancouver" })
-            );
-          });
-          setBookings(data);
+          const startAndEndOfBookings: BookingStartAndEnd[] = data.map(
+            (item: any) => {
+              let startOfBooking = new Date(item.startOfBooking).toString();
+              let endOfBooking = new Date(item.endOfBooking).toString();
+              return { startOfBooking, endOfBooking };
+            }
+          );
 
-          const shiftStart = new Date(shift.date);
-          shiftStart.setHours(
-            Math.floor(shift.startTime / 100),
-            shift.startTime % 100
+          if (service?.duration == undefined) {
+            return;
+          }
+          const availableSlots = getAvailableTimeSlots(
+            startShift,
+            endShift,
+            startAndEndOfBookings,
+            service?.duration
           );
-          setShiftStart(shiftStart);
-
-          const shiftEnd = new Date(shift.date);
-          shiftEnd.setHours(
-            Math.floor(shift.endTime / 100),
-            shift.endTime % 100
-          );
-          setShiftEnd(shiftEnd);
-          let bookingTimes: Date[] = data.map((item: any) => {
-            let date = new Date(item.date);
-            date.setHours(
-              Math.floor(item.startTime / 100),
-              item.startTime % 100
-            );
-            return date;
-          });
-          setBookingTimes(bookingTimes);
-          setBookingHours(
-            getAvailableBookingTimes(shiftStart, shiftEnd, bookingTimes)
-          );
+          setBookingHours(availableSlots);
         } catch (error) {
           console.error("There was an error!", error);
         }
       };
-      shifts();
+      bookings();
     }
-  }, [date]);
+  }, [employeeId, date]);
 
-  // Creates an array of available booking times based on the shift start and end times,
-  //  and the existing bookings of the selected date/shift.
-  //  The interval can be changed by changing the interval variable.
-  function getAvailableBookingTimes(
-    shiftStart: Date,
-    shiftEnd: Date,
-    bookedTimes: Date[],
-    service?: { duration?: number }
+  // ***************************
+  function getAvailableTimeSlots(
+    startTime: string,
+    endTime: string,
+    bookings: BookingStartAndEnd[],
+    serviceDuration: number
   ): Date[] {
-    const availableTimes: Date[] = [];
-    const interval = 15 * 60 * 1000; // 15 minutes in milliseconds
-    // Ensure appointmentDuration is defined and convert to milliseconds
-    let appointmentDuration = service?.duration;
+    const shiftStart = new Date(startTime);
+    const shiftEnd = new Date(endTime);
 
-    appointmentDuration = (appointmentDuration ?? 0) * 60 * 1000; // Convert minutes to milliseconds
-    for (
-      let time = new Date(shiftStart.getTime());
-      time.getTime() + (appointmentDuration ?? 60) <= shiftEnd.getTime();
-      time.setTime(time.getTime() + interval)
-    ) {
-      const appointmentDuration = service?.duration;
-      const appointmentEnd = new Date(
-        time.getTime() + (appointmentDuration ?? 60)
+    // Convert booking times to Date objects
+    const parsedBookings = bookings.map((booking) => ({
+      startOfBooking: new Date(booking.startOfBooking),
+      endOfBooking: new Date(booking.endOfBooking),
+    }));
+
+    // Helper function to add minutes to a date
+    function addMinutes(date: Date, minutes: number): Date {
+      return new Date(date.getTime() + minutes * 60000);
+    }
+
+    // Helper function to check if a time slot overlaps with existing bookings
+    function isOverlapping(start: Date, end: Date): boolean {
+      return parsedBookings.some(
+        (booking) =>
+          (start < booking.endOfBooking && end > booking.startOfBooking) ||
+          (start < booking.startOfBooking &&
+            end > addMinutes(booking.startOfBooking, +serviceDuration))
       );
-      // Check if the current time slot overlaps with any booked times
-      const isBooked = bookedTimes.some((bookedTime) => {
-        const bookedEnd = new Date(
-          bookedTime.getTime() + (appointmentDuration ?? 60)
-        );
-        return time < bookedEnd && appointmentEnd > bookedTime;
-      });
-      if (!isBooked) {
-        availableTimes.push(new Date(time.getTime()));
+    }
+
+    // Generate 15-minute intervals
+    let availableSlots: Date[] = [];
+    for (
+      let currentTime = shiftStart;
+      addMinutes(currentTime, serviceDuration) <= shiftEnd;
+      currentTime = addMinutes(currentTime, 15)
+    ) {
+      const slotEnd = addMinutes(currentTime, serviceDuration);
+      if (!isOverlapping(currentTime, slotEnd) && slotEnd <= shiftEnd) {
+        availableSlots.push(new Date(currentTime));
       }
     }
-    return availableTimes;
+    return availableSlots;
   }
 
-  // Formats the time to a 24 hour format.
-  function formatTime(dateString: string): number {
-    const date: Date = new Date(dateString);
-    let hours: number = date.getHours();
-    let minutes: number = date.getMinutes();
-    const formattedTime: string = `${hours}${
-      minutes < 10 ? "0" : ""
-    }${minutes}`;
+  // // Formats the time to a 24 hour format.
+  // function formatTime(dateString: string): number {
+  //   const date: Date = new Date(dateString);
+  //   let hours: number = date.getHours();
+  //   let minutes: number = date.getMinutes();
+  //   const formattedTime: string = `${hours}${
+  //     minutes < 10 ? "0" : ""
+  //   }${minutes}`;
 
-    return parseInt(formattedTime, 10);
-  }
+  //   return parseInt(formattedTime, 10);
+  // }
   return (
     <>
       <div>
@@ -304,11 +334,12 @@ const BookingForm: React.FC = () => {
                   selected={date}
                   onSelect={(value) => {
                     setDate(value);
-                    shifts.forEach((item) => {
-                      if (item.date.toString() === value?.toString()) {
-                        setShift(item);
-                      }
-                    });
+                    // shifts.map((item) => {
+                    //   const temp = new Date(item.startShift.getDate());
+                    //   if (temp.toString() === value?.getDate().toString()) {
+                    //     setShift(item);
+                    //   }
+                    // });
                   }}
                   disabled={(date) => {
                     const currentDate = new Date();
@@ -330,9 +361,9 @@ const BookingForm: React.FC = () => {
           <div className="flex flex-col gap-2 my-3 md:my-0">
             <label className="text-md font-light">Booking Time</label>
             <Select
-              defaultValue={startTime?.toString()}
+              // defaultValue={startTime?.toString()}
               onValueChange={(value) => {
-                setStartTime(formatTime(value));
+                setBookingStartDateAndTime(value);
               }}
             >
               <SelectTrigger>
@@ -343,7 +374,7 @@ const BookingForm: React.FC = () => {
                   <SelectItem
                     key={time.toString()}
                     value={time.toString()}
-                    disabled={loading || !employeeId || !date || !shift}
+                    disabled={loading || !employeeId || !date}
                   >
                     {format(time, "p")}
                   </SelectItem>
@@ -355,10 +386,10 @@ const BookingForm: React.FC = () => {
         <div className="flex justify-center items-center">
           <Button
             onClick={onSubmit}
-            disabled={loading || !employeeId || !date || !shift || !startTime}
+            disabled={loading}
             className="py-6 mt-10 w-full md:w-[25vw] md:text-lg text-white bg-slate-700 shadow-lg"
           >
-            {bookingAction}
+            {action}
           </Button>
         </div>
       </div>

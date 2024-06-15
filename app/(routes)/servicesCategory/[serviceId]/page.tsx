@@ -26,15 +26,7 @@ const ServicesCategoryPage: React.FC<ServicesCategoryPageProps> = async ({
     categoryId: params.serviceId
   });
 
-  console.log("SERVICE PAGE PARAMS!!!!!!", params)
-  // console.log("PRODUCTS DATA~~~~~~~", products);
-
   const category = await getCategory(params.serviceId);
-  // const shifts: Shift[] = await getShifts();
-  // const employees: Employee[] = await getEmployees();
-  // console.log("CATEGORY DATA~~~~~~~~", category);
-  // console.log("SHIFTS DATA~~~~~~~~", shifts);
-  // console.log("EMPLOYEES DATA~~~~~~~~", employees);
 
   return (
     <div className="bg-white">

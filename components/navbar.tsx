@@ -11,11 +11,9 @@ export const revalidate = 0;
 
 const Navbar = async () => {
   const categories = await getCategories();
-  // console.log("CATEGORIES DATA~~~~~~~~", categories);
   const data = await getHero();
   const storeName = data[0]?.label;
   const storeLogo = data[0]?.logoUrl;
-  // console.log("HERO DATA~~~~~~~~", data);
   return (
     <div className="border-b">
       <Container>
@@ -25,11 +23,11 @@ const Navbar = async () => {
               <Image
                 src={storeLogo}
                 alt={storeName}
-                width={20}
-                height={20}
+                width={80}
+                height={80}
                 className="rounded"
               />{" "}
-              <p className="font-bold text-sm lg:text-lg">{storeName}</p>
+              {/* <p className="font-bold text-sm lg:text-lg">{storeName}</p> */}
             </div>
           </Link>
           <MainNav data={categories} />

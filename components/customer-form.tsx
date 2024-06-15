@@ -1,20 +1,10 @@
 "use client";
 
-// import { sendMail } from '@/lib/emails/mailService';
-
-// const from: string = `${process.env.MAIL_USERNAME}`;
-// const to: string = '<to email id>';
-// const subject: string = '<subject>';
-// const mailTemplate: string = `<h1>Welcome to our store</h1>`;
-
-
-
 import { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { cn } from "@/lib/utils";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -49,8 +39,10 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
   const router = useRouter();
   const storeId = params.storeId;
   const [customerId, setCustomerId] = useState<string | undefined>(undefined);
-  const [customerEmail, setCustomerEmail] = useState<string | undefined>()
-  const [ customerConfirmEmail, setCustomerConfirmEmail ] = useState<string | undefined>()
+  const [customerEmail, setCustomerEmail] = useState<string | undefined>();
+  const [customerConfirmEmail, setCustomerConfirmEmail] = useState<
+    string | undefined
+  >();
 
   const [loading, setLoading] = useState(false);
 
@@ -68,8 +60,28 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
   });
 
   const onSubmit = async (data: FormValues) => {
+    if(!data.custFName)
+    {
+      toast.error("First Name is required.");
+      return;
+    }
+    if(!data.custLName)
+    {
+      toast.error("Last Name is required.");
+      return;
+    }
+    if(!data.email)
+    {
+      toast.error("Email is required.");
+      return;
+    }
     if (data.email !== customerConfirmEmail) {
       toast.error("Emails do not match.");
+      return;
+    }
+    if(!data.phone)
+    {
+      toast.error("Phone is required.");
       return;
     }
     try {
@@ -106,7 +118,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
   return (
     <>
       <h2 className="text-2xl text-center font-bold text-gray-800">Customer</h2>
-      <p className="pt-2  pb-3 text-sm md:text-md font-light text-gray-800">
+      <p className="pt-2 pb-7 text-center text-sm md:text-md font-md text-gray-800">
         * Create a customer profile, to book a service.
       </p>
       <Separator />
@@ -166,13 +178,17 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
               )}
             />
             <div className="my-3 md:my-0">
-              <Label className="text-md font-light" htmlFor="">Confirm Email</Label>
+              <Label className="text-md font-light" htmlFor="">
+                Confirm Email
+              </Label>
 
-              <Input className="mt-2" 
-              type="email" id="email"
-               placeholder="Confirm Email" 
-               onChange={(e) => setCustomerConfirmEmail(e.target.value)}
-               />
+              <Input
+                className="mt-2"
+                type="email"
+                id="email"
+                placeholder="Confirm Email"
+                onChange={(e) => setCustomerConfirmEmail(e.target.value)}
+              />
             </div>
             {/* CUSTOMER PHONE */}
             <FormField
