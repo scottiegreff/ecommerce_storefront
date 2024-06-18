@@ -10,18 +10,21 @@ const Hero: React.FC<HeroProps> = ({ data }) => {
   const label = data[0]?.label;
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 rounded-xl overflow-hidden text-white">
-
-      <Image
-        src={img}
-        alt={label}
-        layout="responsive"
-        width={50}
-        height={50}
-        className="rounded-xl z-20 m-auto w-[10vw] h-[10vh]" // Ensure image covers the entire area
-      />
+    <div className="flex justify-center items-center mt-10">
+      <svg
+        style={{ backgroundImage: `url(${img})` }}
+        className="animate-bounce h-[70vh] w-[70vw] bg-contain bg-center bg-no-repeat rounded rounded-s-full -rotate-[10deg]"
+        // viewBox="24 24 24 24"
+      ></svg>
     </div>
   );
 };
 
 export default Hero;
+{
+  /* <div className="h-full w-full text-center gap-y-8 flex items-center justify-center">
+        <div className="font-bold text-3xl text-pink-400 sm:text-5xl lg:text-6xl sm:max-w-xl max-w-xs">
+          {data?.label}
+        </div>
+      </div>  */
+}

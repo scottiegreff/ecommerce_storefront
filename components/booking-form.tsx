@@ -41,7 +41,7 @@ const BookingForm: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const toastMessage = "Booking created.";
+  const toastMessage = "Booked... Confirmation has been sent to your email.";
   const action = "Book Appointment";
 
   const onSubmit = async () => {
