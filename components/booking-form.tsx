@@ -70,7 +70,7 @@ const BookingForm: React.FC = () => {
       shiftId: shift?.id,
       email: customerEmail,
     };
-    console.log("DATA: ", data);
+    // console.log("DATA: ", data);
     try {
       setLoading(true);
       const response = await fetch(
@@ -81,7 +81,7 @@ const BookingForm: React.FC = () => {
         }
       );
       const responseData = await response.json(); // Access the response data
-      console.log("RESPONSE DATA: ", responseData);
+      // console.log("RESPONSE DATA: ", responseData);
       router.refresh();
       toast.success(toastMessage);
     } catch (error: any) {
