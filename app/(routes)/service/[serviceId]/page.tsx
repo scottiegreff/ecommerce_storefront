@@ -30,7 +30,7 @@ const ServicePage: React.FC<ServicePageProps> = async ({ params }) => {
         <div className="px-4 py-10 sm:px-6 lg:px-8">
           <div
             style={{ backgroundImage: `url(${service.images[0].url})` }}
-            className="rounded-xl relative aspect-square md:aspect-[3.5/1] overflow-hidden bg-cover"
+            className="rounded-xl relative aspect-square md:aspect-[2.35/1] overflow-hidden bg-cover"
           >
             <div className="h-full w-full flex flex-col justify-center items-center text-center gap-y-8">
               <div className="font-bold text-pink-400 text-3xl sm:text-5xl lg:text-6xl sm:max-w-xl max-w-xs">
