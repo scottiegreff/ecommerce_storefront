@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
+
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,8 @@ import {
 } from "@/components/ui/select";
 import { BookingStartAndEnd, Employee, Service, Shift } from "@/types";
 import React from "react";
+import getShifts from "@/actions/get-shifts";
+import getBookings from "@/actions/get-bookings";
 
 const BookingForm: React.FC = () => {
   const { serviceId, storeId } = useParams();
@@ -70,7 +73,7 @@ const BookingForm: React.FC = () => {
       shiftId: shift?.id,
       email: customerEmail,
     };
-    // console.log("DATA: ", data);
+
     try {
       setLoading(true);
       const response = await fetch(
@@ -141,27 +144,34 @@ const BookingForm: React.FC = () => {
   useEffect(() => {
     // Fetch all shifts of employeeId from the API, and returns the shifts from today onwards, then setShifts.
     if (service && employeeId) {
-      const shifts = async () => {
+      const getShiftsUE = async () => {
         try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/shiftsStore`,
-            {
-              method: "POST",
-              body: JSON.stringify({ employeeId: employeeId }),
-            }
-          );
-          const data: Shift[] = await response.json();
-
-          data.forEach((item: Shift) => {
-            item.startShift = formatUTCtoLocalDate(item.startShift);
-            item.endShift = formatUTCtoLocalDate(item.endShift);
+          const data = await getShifts({
+            employeeId: employeeId,
           });
           setShifts(data);
+          // const shifts = async () => {
+          //   try {
+          //     const response = await fetch(
+          //       `${process.env.NEXT_PUBLIC_API_URL}/shiftsStore`,
+          //       {
+          //         method: "POST",
+          //         body: JSON.stringify({ employeeId: employeeId }),
+          //       }
+          //     );
+          //     const data: Shift[] = await response.json();
+
+          //     data.forEach((item: Shift) => {
+          //       item.startShift = formatUTCtoLocalDate(item.startShift);
+          //       item.endShift = formatUTCtoLocalDate(item.endShift);
+          //     });
+          //     setShifts(data);
         } catch (error) {
           console.error("There was an error!", error);
         }
       };
-      shifts();
+      getShiftsUE();
+      console.log("Shifts: ", shifts);
     }
   }, [employeeId]);
 
@@ -187,17 +197,24 @@ const BookingForm: React.FC = () => {
 
       const bookings = async () => {
         try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/bookingsStoreGet`,
-            {
-              method: "POST",
-              body: JSON.stringify({
-                shiftId: shift?.id,
-                employeeId: employeeId,
-              }),
-            }
-          );
-          const data = await response.json();
+          const data = await getBookings ({
+            shiftId: shift?.id,
+            employeeId: employeeId,
+          });
+          // const bookings = async () => {
+          //   try {
+          //     const response = await fetch(
+          //       `${process.env.NEXT_PUBLIC_API_URL}/bookingsStoreGet`,
+          //       {
+          //         method: "POST",
+          //         body: JSON.stringify({
+          //           shiftId: shift?.id,
+          //           employeeId: employeeId,
+          //         }),
+          //       }
+          //     );
+          //     const data = await response.json();
+
           const startAndEndOfBookings: BookingStartAndEnd[] = data.map(
             (item: any) => {
               let startOfBooking = new Date(item.startOfBooking).toString();

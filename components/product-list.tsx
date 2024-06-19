@@ -4,7 +4,7 @@ import NoResults from "@/components/ui/no-results";
 
 interface ProductListProps {
   title: string;
-  items: Product[] | Service[];
+  items: Product[];
 }
 
 const ProductList: React.FC<ProductListProps> = ({ title, items }) => {

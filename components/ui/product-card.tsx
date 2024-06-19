@@ -9,10 +9,10 @@ import Currency  from "@/components/ui/currency";
 import IconButton  from "@/components/ui/icon-button";
 import usePreviewModal from "@/hooks/use-preview-modal";
 import useCart from "@/hooks/use-cart";
-import { Product, Service } from "@/types";
+import { Product } from "@/types";
 
 interface ProductCard {
-  data: Product | Service
+  data: Product
 }
 
 const ProductCard: React.FC<ProductCard> = ({
@@ -21,21 +21,20 @@ const ProductCard: React.FC<ProductCard> = ({
   const previewModal = usePreviewModal();
   const cart = useCart();
   const router = useRouter();
-
+  console.log("PRODUCT CARD", data);
   const handleClick = () => {
     router.push(`/product/${data?.id}`);
   };
 
   const onPreview: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.stopPropagation();
-
     previewModal.onOpen(data);
   };
 
   const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.stopPropagation();
-
-    // cart.addItem(data);
+    console.log("ADD TO CART???>", data);
+    cart.addItem(data);
   };
    
   return ( 
@@ -67,7 +66,7 @@ const ProductCard: React.FC<ProductCard> = ({
         <p className="font-semibold text-lg">{data.name}</p>
         <p className="text-sm text-gray-500">{data.category?.name}</p>
       </div>
-      {/* Price & Reiew */}
+      {/* Price & Review */}
       <div className="flex items-center justify-between">
         <Currency value={data?.price} />
       </div>

@@ -55,10 +55,8 @@ export interface Service {
   name: string;
   description: string;
   price: string;
-  isFeatured: boolean;
   duration: number;
-  color: Color;
-  size: Size;
+  isFeatured: boolean;
   images: Image[];
   bookings: Booking[];
 }

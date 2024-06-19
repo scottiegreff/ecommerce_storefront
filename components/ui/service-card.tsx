@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { MouseEventHandler } from "react";
-import { Expand, ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import Currency  from "@/components/ui/currency";
@@ -19,7 +18,7 @@ const ServiceCard: React.FC<ServiceCard> = ({
   data
 }) => {
   const previewModal = usePreviewModal();
-  const cart = useCart();
+  // const cart = useCart();
   const router = useRouter();
 
   const handleClick = () => {
@@ -28,15 +27,14 @@ const ServiceCard: React.FC<ServiceCard> = ({
 
   const onPreview: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.stopPropagation();
-
-    // previewModal.onOpen(data);
+    previewModal.onOpen(data);
   };
 
-  const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {
-    event.stopPropagation();
+  // const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {
+  //   event.stopPropagation();
 
-    // cart.addItem(data);
-  };
+  //   // cart.addItem(data);
+  // };
    
   return ( 
     <div onClick={handleClick} className="bg-white group cursor-pointer rounded-xl border p-3 space-y-4">
@@ -54,7 +52,10 @@ const ServiceCard: React.FC<ServiceCard> = ({
       {/* Description */}
       <div>
         <p className="font-semibold text-lg">{data.name}</p>
-        <p className="text-sm text-gray-500">{data.category?.name}</p>
+        <p className="text-sm text-gray-500">
+          {/* {data.category?.name} */}
+          BOOK
+          </p>
       </div>
       {/* Price & Reiew */}
       <div className="flex items-center justify-between">

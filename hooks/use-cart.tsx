@@ -7,7 +7,7 @@ import { AlertTriangle } from 'lucide-react';
 
 interface CartStore {
   items: Product[];
-  addItem: (data: Product) => void;
+  addItem: (data: Product ) => void;
   removeItem: (id: string) => void;
   removeAll: () => void;
 }

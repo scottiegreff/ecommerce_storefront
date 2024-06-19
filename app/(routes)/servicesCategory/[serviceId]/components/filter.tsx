@@ -8,13 +8,13 @@ import { cn } from "@/lib/utils";
 import { Color, Size } from "@/types";
 
 interface FilterProps {
-  data: (Size | Color)[];
+  // data: (Size | Color)[];
   name: string;
   valueKey: string;
 };
 
 const Filter: React.FC<FilterProps> = ({
-  data,
+  // data,
   name,
   valueKey,
 }) => {
@@ -49,7 +49,7 @@ const Filter: React.FC<FilterProps> = ({
         {name}
       </h3>
       <hr className="my-4" />
-      <div className="flex flex-wrap gap-2">
+      {/* <div className="flex flex-wrap gap-2">
         {data.map((filter) => (
           <div key={filter.id} className="flex items-center">
             <Button
@@ -63,7 +63,7 @@ const Filter: React.FC<FilterProps> = ({
             </Button>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };
