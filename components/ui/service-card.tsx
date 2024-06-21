@@ -25,10 +25,6 @@ const ServiceCard: React.FC<ServiceCard> = ({
     router.push(`/service/${data?.id}`);
   };
 
-  const onPreview: MouseEventHandler<HTMLButtonElement> = (event) => {
-    event.stopPropagation();
-    previewModal.onOpen(data);
-  };
 
   // const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {
   //   event.stopPropagation();
