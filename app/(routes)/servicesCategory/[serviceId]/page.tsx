@@ -29,7 +29,7 @@ const ServicesCategoryPage: React.FC<ServicesCategoryPageProps> = async ({
   const category = await getCategory(params.serviceId);
 
   return (
-    <div className="bg-white">
+    <div className="bg-black">
       <Container>
         <Billboard data={category?.billboard} />
 

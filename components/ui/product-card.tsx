@@ -37,7 +37,7 @@ const ProductCard: React.FC<ProductCard> = ({
   };
    
   return ( 
-    <div onClick={handleClick} className="bg-white group cursor-pointer rounded-xl border p-3 space-y-4">
+    <div onClick={handleClick} className="bg-black border-[#C68DBA]  group cursor-pointer rounded-xl border p-3 space-y-4">
       {/* Image & actions */}
       
       <div className="aspect-square rounded-xl bg-gray-100 relative">
@@ -51,22 +51,25 @@ const ProductCard: React.FC<ProductCard> = ({
           <div className="flex gap-x-6 justify-center">
             <IconButton 
               onClick={onPreview} 
-              icon={<Expand size={20} className="text-gray-600" />}
+              icon={<Expand size={20} className=" text-[#C68DBA]" />}
             />
             <IconButton
               onClick={onAddToCart} 
-              icon={<ShoppingCart size={20} className="text-gray-600" />} 
+              icon={<ShoppingCart size={20} className=" text-[#C68DBA]" />} 
             />
           </div>
         </div>
       </div>
       {/* Description */}
       <div>
-        <p className="font-semibold text-lg">{data.name}</p>
-        <p className="text-sm text-gray-500">{data.category?.name}</p>
+        <p className="font-semibold text-lg  text-[#C68DBA]">{data.name}</p>
+        <div className="flex items-center justify-between">
+        <p className="text-sm text-[#C68DBA]">{data.category?.name}</p>
+        {/* <p className="text-sm text-[#C68DBA]">{data.size}</p> */}
+        </div>
       </div>
       {/* Price & Review */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between  text-[#C68DBA]">
         <Currency value={data?.price} />
       </div>
     </div>

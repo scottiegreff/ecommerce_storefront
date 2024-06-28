@@ -117,8 +117,8 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
 
   return (
     <>
-      <h2 className="text-2xl text-center font-bold text-gray-800">Customer</h2>
-      <p className="pt-2 pb-7 text-center text-sm md:text-md font-md text-gray-800">
+      <h2 className="text-2xl text-center font-bold text-[#C68DBA]">Customer</h2>
+      <p className="pt-2 pb-7 text-center text-sm md:text-md font-md text-[#C68DBA]">
         * Create a customer profile, to book a service.
       </p>
       <Separator />
@@ -126,20 +126,20 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 w-full"
+          className="space-y-8 w-full text-[#C68DBA]"
         >
-          <div className="md:grid md:grid-cols-2 gap-8">
+          <div className="md:grid md:grid-cols-2 gap-8 ">
             {/* CUSTOMER FIRST NAME */}
             <FormField
               control={form.control}
               name="custFName"
               render={({ field }) => (
-                <FormItem className="my-3 md:my-0">
+                <FormItem className="my-3 md:my-0 text-[#C68DBA]">
                   <FormLabel className="text-md font-light">
                     First Name
                   </FormLabel>
-                  <FormControl>
-                    <Input placeholder="First Name" {...field} />
+                  <FormControl >
+                    <Input  placeholder="First Name" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -208,7 +208,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
           <div className="flex justify-center items-center">
             <Button
               disabled={loading}
-              className="py-6 mt-10 w-[20vw] md:text-lg text-white bg-slate-700 shadow-lg"
+              className="py-6 mt-10 w-[20vw] md:text-lg text-white bg-[#C68DBA] shadow-lg"
               type="submit"
             >
               {action}

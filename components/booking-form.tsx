@@ -150,22 +150,6 @@ const BookingForm: React.FC = () => {
             employeeId: employeeId,
           });
           setShifts(data);
-          // const shifts = async () => {
-          //   try {
-          //     const response = await fetch(
-          //       `${process.env.NEXT_PUBLIC_API_URL}/shiftsStore`,
-          //       {
-          //         method: "POST",
-          //         body: JSON.stringify({ employeeId: employeeId }),
-          //       }
-          //     );
-          //     const data: Shift[] = await response.json();
-
-          //     data.forEach((item: Shift) => {
-          //       item.startShift = formatUTCtoLocalDate(item.startShift);
-          //       item.endShift = formatUTCtoLocalDate(item.endShift);
-          //     });
-          //     setShifts(data);
         } catch (error) {
           console.error("There was an error!", error);
         }
@@ -201,20 +185,6 @@ const BookingForm: React.FC = () => {
             shiftId: shift?.id,
             employeeId: employeeId,
           });
-          // const bookings = async () => {
-          //   try {
-          //     const response = await fetch(
-          //       `${process.env.NEXT_PUBLIC_API_URL}/bookingsStoreGet`,
-          //       {
-          //         method: "POST",
-          //         body: JSON.stringify({
-          //           shiftId: shift?.id,
-          //           employeeId: employeeId,
-          //         }),
-          //       }
-          //     );
-          //     const data = await response.json();
-
           const startAndEndOfBookings: BookingStartAndEnd[] = data.map(
             (item: any) => {
               let startOfBooking = new Date(item.startOfBooking).toString();
@@ -287,24 +257,13 @@ const BookingForm: React.FC = () => {
     return availableSlots;
   }
 
-  // // Formats the time to a 24 hour format.
-  // function formatTime(dateString: string): number {
-  //   const date: Date = new Date(dateString);
-  //   let hours: number = date.getHours();
-  //   let minutes: number = date.getMinutes();
-  //   const formattedTime: string = `${hours}${
-  //     minutes < 10 ? "0" : ""
-  //   }${minutes}`;
-
-  //   return parseInt(formattedTime, 10);
-  // }
   return (
     <>
       <div>
-        <h2 className="mb-10 text-2xl text-center font-bold text-gray-800">
+        <h2 className="mb-10 text-2xl text-center font-bold text-[#C68DBA]">
           Book
         </h2>
-        <div className="md:grid md:grid-cols-2 gap-8">
+        <div className="md:grid md:grid-cols-2 gap-8 text-[#C68DBA]">
           {/* EMPLOYEE ID */}
           <div className="flex flex-col gap-2 my-3 md:my-0">
             <label className="text-md font-light">Book Staff</label>
@@ -404,7 +363,7 @@ const BookingForm: React.FC = () => {
           <Button
             onClick={onSubmit}
             disabled={loading}
-            className="py-6 mt-10 w-full md:w-[25vw] md:text-lg text-white bg-slate-700 shadow-lg"
+            className="py-6 mt-10 w-full md:w-[25vw] md:text-lg text-white bg-[#C68DBA] shadow-lg"
           >
             {action}
           </Button>

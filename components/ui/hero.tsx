@@ -11,11 +11,13 @@ const Hero: React.FC<HeroProps> = ({ data }) => {
 
   return (
     <div className="flex justify-center items-center mt-10">
+      <div className="p-10 shadow-2xl">
       <svg
         style={{ backgroundImage: `url(${img})` }}
-        className="h-[35vh] w-[90vw]  md:h-[70vh] md:w-[70vw] bg-contain bg-center bg-no-repeat rounded-rotate-[10deg]"
+        className="h-[35vh] w-[90vw]  md:h-[70vh] md:w-[70vw] bg-contain bg-center bg-no-repeat rounded-rotate-[10deg] "
         // viewBox="24 24 24 24"
       ></svg>
+      </div>
     </div>
   );
 };

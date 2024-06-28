@@ -71,3 +71,11 @@ export interface Shift {
   startShift: Date;
   endShift: Date;
 }
+export interface Store {
+  id: string;
+  name: string;
+  openTime: number;
+  closeTime: number;
+  address: string;
+  phone: string;
+}

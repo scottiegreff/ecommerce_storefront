@@ -21,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={font.className}>
+      <body className="bg-black ">
         <ToastProvider />
         <ModalProvider />
         <Navbar />
@@ -31,3 +31,4 @@ export default function RootLayout({
     </html>
   )
 }
+// bg-[#C68DBA]

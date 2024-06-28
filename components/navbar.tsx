@@ -4,6 +4,7 @@ import MainNav from "@/components/main-nav";
 import Container from "@/components/ui/container";
 import NavbarActions from "@/components/navbar-actions";
 import getCategories from "@/actions/get-categories";
+// import getStore from "@/actions/get-store";
 import getHero from "@/actions/get-hero";
 import Image from "next/image";
 
@@ -11,6 +12,8 @@ export const revalidate = 0;
 
 const Navbar = async () => {
   const categories = await getCategories();
+  // const store = await getStore();
+  // console.log(store);
   const data = await getHero();
   const storeName = data[0]?.label;
   const storeLogo = data[0]?.logoUrl;
@@ -31,6 +34,7 @@ const Navbar = async () => {
             </div>
           </Link>
           <MainNav data={categories} />
+
           <NavbarActions />
         </div>
       </Container>
