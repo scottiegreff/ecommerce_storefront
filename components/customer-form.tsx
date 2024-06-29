@@ -81,8 +81,6 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
       return;
     }
 
-    console.log("FORM EMAIL: ",data.email);
-    console.log("CONFIRM: ", customerConfirmEmail);
     if (!data.phone) {
       toast.error("Phone is required.");
       return;
