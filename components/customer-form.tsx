@@ -88,13 +88,11 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
 
     try {
       setLoading(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/customers`,
-        {
-          method: "POST",
-          body: JSON.stringify(data),
-        }
-      );
+      const URL = `${process.env.NEXT_PUBLIC_API_URL}/shifts`;
+      const response = await fetch(URL, {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
       const responseData = await response.json();
       // setCustomerId(responseData.id); // Set the customerId to the response data id
       localStorage.setItem("customerId", responseData.id);
@@ -191,7 +189,9 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
                 type="email"
                 id="email"
                 placeholder="Confirm Email"
-                onChange={(e) => setCustomerConfirmEmail(e.target.value.toLowerCase())}
+                onChange={(e) =>
+                  setCustomerConfirmEmail(e.target.value.toLowerCase())
+                }
               />
             </div>
             {/* CUSTOMER PHONE */}

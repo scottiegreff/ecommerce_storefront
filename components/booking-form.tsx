@@ -75,6 +75,7 @@ const BookingForm: React.FC = () => {
     };
 
     try {
+      const URL=`${process.env.NEXT_PUBLIC_API_URL}/shifts`;
       setLoading(true);
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/bookings`,
@@ -153,7 +154,6 @@ const BookingForm: React.FC = () => {
         }
       };
       getShiftsUE();
-      console.log("Shifts: ", shifts);
     }
   }, [employeeId]);
 
