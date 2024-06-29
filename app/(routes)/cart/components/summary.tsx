@@ -29,11 +29,34 @@ const Summary = () => {
     return total + Number(item.price);
   }, 0);
 
+  // const onCheckout = async () => {
+  //   const response = await axios.post(
+  //     `${process.env.NEXT_PUBLIC_API_URL}/productCheckout`,
+  //     {
+  //       productIds: items.map((item) => item.id),
+  //     }
+  //   );
+  //   window.location = response.data.url;
+  // };
+
+console.log("items BITHCHHHHH", items)
+
+  const itemMap = new Map();
+
+  items.forEach((item) => {
+    if (itemMap.has(item.id)) {
+      itemMap.get(item.id).quantity++;
+    } else {
+      itemMap.set(item.id, { id: item.id, quantity: 1 });
+    }
+  });
+  const cartData = Array.from(itemMap.values());
+  console.log("cartData", cartData);
   const onCheckout = async () => {
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/productCheckout`,
       {
-        productIds: items.map((item) => item.id),
+        cartData: cartData,
       }
     );
     window.location = response.data.url;
@@ -51,7 +74,7 @@ const Summary = () => {
       <Button
         onClick={onCheckout}
         disabled={items.length === 0}
-        className="w-full mt-6"
+        className="w-full md:w-60 mt-6 border border-white bg-[#C68DBA] hover:bg-[#C68DBA] hover:border-[#C68DBA] text-white"
       >
         Checkout
       </Button>
