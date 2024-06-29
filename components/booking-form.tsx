@@ -261,7 +261,7 @@ const BookingForm: React.FC = () => {
     <>
       <div>
         <h2 className="mb-10 text-2xl text-center font-bold text-[#C68DBA]">
-          Book
+          Book Appointment
         </h2>
         <div className="md:grid md:grid-cols-2 gap-8 text-[#C68DBA]">
           {/* EMPLOYEE ID */}
@@ -363,7 +363,7 @@ const BookingForm: React.FC = () => {
           <Button
             onClick={onSubmit}
             disabled={loading}
-            className="py-6 mt-10 w-full md:w-[25vw] md:text-lg text-white bg-[#C68DBA] shadow-lg"
+            className="py-6 mt-10 w-full md:w-[25vw] md:text-lg text-white border border-white bg-[#C68DBA] shadow-lg"
           >
             {action}
           </Button>

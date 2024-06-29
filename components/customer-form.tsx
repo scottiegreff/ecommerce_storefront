@@ -60,30 +60,34 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
   });
 
   const onSubmit = async (data: FormValues) => {
-    if(!data.custFName)
-    {
+    if (!data.custFName) {
       toast.error("First Name is required.");
       return;
     }
-    if(!data.custLName)
-    {
+    if (!data.custLName) {
       toast.error("Last Name is required.");
       return;
     }
-    if(!data.email)
-    {
+    if (!data.email) {
       toast.error("Email is required.");
       return;
     }
+    data.email = data.email.toLowerCase();
+    data.email = data.email.trim();
+    data.email = data.email.replace(/\s/g, "");
+
     if (data.email !== customerConfirmEmail) {
       toast.error("Emails do not match.");
       return;
     }
-    if(!data.phone)
-    {
+
+    console.log("FORM EMAIL: ",data.email);
+    console.log("CONFIRM: ", customerConfirmEmail);
+    if (!data.phone) {
       toast.error("Phone is required.");
       return;
     }
+
     try {
       setLoading(true);
       const response = await fetch(
@@ -117,9 +121,11 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
 
   return (
     <>
-      <h2 className="text-2xl text-center font-bold text-[#C68DBA]">Customer</h2>
-      <p className="pt-2 pb-7 text-center text-sm md:text-md font-md text-[#C68DBA]">
-        * Create a customer profile, to book a service.
+      <h2 className="text-2xl text-center font-bold text-[#C68DBA]">
+        Customer
+      </h2>
+      <p className="pt-2 pb-7 text-center text-sm md:text-md font-md text-[#ffffff]">
+        * To book a service, create a customer profile.
       </p>
       <Separator />
       {/* CUSTOMER FORM */}
@@ -138,8 +144,8 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
                   <FormLabel className="text-md font-light">
                     First Name
                   </FormLabel>
-                  <FormControl >
-                    <Input  placeholder="First Name" {...field} />
+                  <FormControl>
+                    <Input placeholder="First Name" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -187,7 +193,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
                 type="email"
                 id="email"
                 placeholder="Confirm Email"
-                onChange={(e) => setCustomerConfirmEmail(e.target.value)}
+                onChange={(e) => setCustomerConfirmEmail(e.target.value.toLowerCase())}
               />
             </div>
             {/* CUSTOMER PHONE */}
@@ -208,7 +214,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
           <div className="flex justify-center items-center">
             <Button
               disabled={loading}
-              className="py-6 mt-10 w-[20vw] md:text-lg text-white bg-[#C68DBA] shadow-lg"
+              className="py-6 mt-10 w-[20vw] md:text-lg text-white border border-white bg-[#C68DBA] shadow-lg"
               type="submit"
             >
               {action}

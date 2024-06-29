@@ -36,25 +36,25 @@ const ServiceCard: React.FC<ServiceCard> = ({
     <div onClick={handleClick} className="bg-black group cursor-pointer rounded-xl border-[#C68DBA] border p-3 space-y-4">
       {/* Image & actions */}
       
-      <div className="aspect-square rounded-xl bg-gray-100 relative">
+      <div className="aspect-square rounded-xl relative">
         <Image 
           src={data.images?.[0]?.url} 
           alt="" 
           fill
-          className="aspect-square object-cover rounded-md"
+          className="aspect-square object-cover rounded-xl"
         />
 
       </div>
       {/* Description */}
       <div>
-        <p className="font-semibold text-lg text-[#C68DBA]">{data.name}</p>
-        <p className="text-sm text-[#C68DBA]">
+        <p className="font-semibold text-xl text-[#C68DBA]">{data.name}</p>
+        <p className="text-sm text-[#ffffff]">
           {/* {data.category?.name} */}
           BOOK
           </p>
       </div>
       {/* Price & Reiew */}
-      <div className="flex items-center justify-between  text-[#C68DBA]">
+      <div className="flex items-center justify-between  text-[#ffffff]">
         <Currency value={data?.price} />
       </div>
     </div>
