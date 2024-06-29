@@ -84,7 +84,6 @@ const BookingForm: React.FC = () => {
         }
       );
       const responseData = await response.json(); // Access the response data
-      // console.log("RESPONSE DATA: ", responseData);
       router.refresh();
       toast.success(toastMessage);
     } catch (error: any) {
@@ -104,7 +103,6 @@ const BookingForm: React.FC = () => {
   // Function called from the date disabled attribute to check if the date is the same as the employeeId.
   // If the date is the same as the employeeId then the date is NOT disabled.
   function isDateSameAsEmployeeId(date: Date, shifts: Shift[]) {
-    // console.log("SHIFT.START SHIFT: ", shifts[0].startShift, "- DATE: ", date);
     return shifts?.some((shift) => {
       let temp = new Date(shift.startShift);
       temp.setHours(0, 0, 0, 0);
