@@ -39,7 +39,7 @@ const Summary = () => {
   //   window.location = response.data.url;
   // };
 
-const URL=`${process.env.NEXT_PUBLIC_API_URL}/shifts`;
+  const URL = `${process.env.NEXT_PUBLIC_API_URL}/shifts`;
   const itemMap = new Map();
 
   items.forEach((item) => {
@@ -51,13 +51,14 @@ const URL=`${process.env.NEXT_PUBLIC_API_URL}/shifts`;
   });
   const cartData = Array.from(itemMap.values());
   const onCheckout = async () => {
-    const response = await axios.post(
-      URL,
-      {
+    try {
+      const response = await axios.post(URL, {
         cartData: cartData,
-      }
-    );
-    window.location = response.data.url;
+      });
+      window.location = response.data.url;
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
