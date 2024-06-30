@@ -39,7 +39,7 @@ const Summary = () => {
   //   window.location = response.data.url;
   // };
 
-  const URL = `${process.env.NEXT_PUBLIC_API_URL}/productCheckout`;
+
   const itemMap = new Map();
 
   items.forEach((item) => {
@@ -53,10 +53,10 @@ const Summary = () => {
   const onCheckout = async () => {
     console.log("CART DATA: ", cartData);
     try {
-      const response = await axios.post(URL, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/productCheckout`, {
         cartData: cartData,
       });
-      window.location = response.data.url;
+      // window.location = response.data.url;
     } catch (error) {
       console.error(error);
     }
