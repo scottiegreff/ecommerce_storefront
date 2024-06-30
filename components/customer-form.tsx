@@ -91,9 +91,16 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
       const URL = `${process.env.NEXT_PUBLIC_API_URL}/customers`;
       const response = await fetch(URL, {
         method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=UTF-8",
+          Accept: "*/*",
+          Origin: "https://www.prisoneroflovestudio.com",
+        },
         body: JSON.stringify(data),
+        redirect: "follow", // Ensures the redirect is followed,
       });
       const responseData = await response.json();
+
       // setCustomerId(responseData.id); // Set the customerId to the response data id
       localStorage.setItem("customerId", responseData.id);
       localStorage.setItem("customerEmail", responseData.email);
