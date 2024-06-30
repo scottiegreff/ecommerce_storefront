@@ -98,7 +98,11 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
         },
         body: JSON.stringify(data),
         redirect: "follow", // Ensures the redirect is followed,
-      });
+      })
+        .then((response) => response)
+        .catch((error) => {
+          throw new Error(error);
+        });
       const responseData = await response.json();
 
       // setCustomerId(responseData.id); // Set the customerId to the response data id
