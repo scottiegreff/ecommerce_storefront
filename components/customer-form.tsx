@@ -88,7 +88,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
 
     try {
       setLoading(true);
-      const URL = `${process.env.NEXT_PUBLIC_API_URL}/shifts`;
+      const URL = `${process.env.NEXT_PUBLIC_API_URL}/customers`;
       const response = await fetch(URL, {
         method: "POST",
         body: JSON.stringify(data),

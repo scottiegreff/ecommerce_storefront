@@ -39,7 +39,7 @@ const Summary = () => {
   //   window.location = response.data.url;
   // };
 
-  const URL = `${process.env.NEXT_PUBLIC_API_URL}/shifts`;
+  const URL = `${process.env.NEXT_PUBLIC_API_URL}/productCheckout`;
   const itemMap = new Map();
 
   items.forEach((item) => {
@@ -51,6 +51,7 @@ const Summary = () => {
   });
   const cartData = Array.from(itemMap.values());
   const onCheckout = async () => {
+    console.log("CART DATA: ", cartData);
     try {
       const response = await axios.post(URL, {
         cartData: cartData,

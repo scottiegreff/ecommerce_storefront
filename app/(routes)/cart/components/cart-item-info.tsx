@@ -5,6 +5,7 @@ interface CartItemInfoProps {
 const CartItemInfo: React.FC<CartItemInfoProps> = ({
   product
 }) => {
+  console.log("PRODUCT ITEM: ", product)
   return ( 
     <div>
       <div className="flex justify-between">
