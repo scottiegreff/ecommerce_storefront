@@ -10,7 +10,7 @@ const Hero: React.FC<HeroProps> = ({ data }) => {
   const label = data[0]?.label;
 
   return (
-    <div className="flex justify-center items-center mt-10">
+    <div className="flex justify-center items-center">
       <div className="p-10 shadow-2xl">
       <svg
         style={{ backgroundImage: `url(${img})` }}
