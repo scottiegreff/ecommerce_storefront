@@ -20,6 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import React from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const formSchema = z.object({
   custFName: z.string().min(2),
@@ -45,6 +46,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
   >();
 
   const [loading, setLoading] = useState(false);
+  const [recaptcha, setRecaptcha] = useState<string | null>()
 
   const toastMessage = "You are a Customer.";
   const action = "Submit";
@@ -60,6 +62,10 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
   });
 
   const onSubmit = async (data: FormValues) => {
+    if(!recaptcha){
+      toast.error("YOU ARE A ROBOT ?!?!?!");
+      return
+    }
     if (!data.custFName) {
       toast.error("First Name is required.");
       return;
@@ -131,7 +137,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
       <h2 className="text-2xl text-center font-bold text-[#C68DBA]">
         Customer
       </h2>
-      <p className="pt-2 pb-7 text-center text-sm md:text-md font-md text-[#ffffff]">
+      <p className="pt-2 pb-7 text-center text-sm md:text-md font-md text-white">
         * To book a service, create a customer profile.
       </p>
       <Separator />
@@ -219,6 +225,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
                 </FormItem>
               )}
             />
+          <ReCAPTCHA onChange={setRecaptcha} sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}/>
           </div>
           <div className="flex justify-center items-center">
             <Button

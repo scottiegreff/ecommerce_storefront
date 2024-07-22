@@ -51,7 +51,7 @@ const Summary = () => {
   });
   const cartData = Array.from(itemMap.values());
   const onCheckout = async () => {
-    console.log("CART DATA: ", cartData);
+    console.log("CART DATA FROM STORE: ", cartData);
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/productCheckout`, {
         cartData: cartData,
