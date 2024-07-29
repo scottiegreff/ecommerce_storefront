@@ -63,7 +63,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
 
   const onSubmit = async (data: FormValues) => {
     if(!recaptcha){
-      toast.error("YOU ARE A ROBOT ?!?!?!");
+      toast.error("YOU ARE A ROBOT ?!?!?!?");
       return
     }
     if (!data.custFName) {
@@ -99,7 +99,6 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onValueChange }) => {
         method: "POST",
         // headers: {
         //   "Content-Type": "text/plain;charset=UTF-8",
-        //   Accept: "*/*",
         //   Origin: "https://www.prisoneroflovestudio.com",
         // },
         body: JSON.stringify(data),
