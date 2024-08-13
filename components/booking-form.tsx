@@ -5,7 +5,6 @@ import { toast } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -26,6 +25,7 @@ import { BookingStartAndEnd, Employee, Service, Shift } from "@/types";
 import React from "react";
 import getShifts from "@/actions/get-shifts";
 import getBookings from "@/actions/get-bookings";
+import { headers } from "next/headers";
 
 const BookingForm: React.FC = () => {
   const { serviceId, storeId } = useParams();
@@ -33,19 +33,42 @@ const BookingForm: React.FC = () => {
   const customerId = localStorage.getItem("customerId") || "";
   const customerEmail = localStorage.getItem("customerEmail") || "";
   const [service, setService] = useState<Service>();
+  const [serviceName, setServiceName] = useState("");
   const [employees, setEmployees] = useState<Employee[]>();
+  const [employeeName, setEmployeeName] = useState("");
   const [employeeId, setEmployeeId] = useState("");
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [shift, setShift] = useState<Shift>();
   const [date, setDate] = useState<Date>();
   let [bookingHours, setBookingHours] = useState<Date[] | undefined>();
-  const [bookingStartDateAndTime, setBookingStartDateAndTime] =
-    useState<String>();
+  const [bookingStartDateAndTime, setBookingStartDateAndTime] = useState("");
 
   const [loading, setLoading] = useState(false);
 
   const toastMessage = "Booked... Confirmation has been sent to your email.";
   const action = "Book Appointment";
+
+  type EmailData = {
+    customerEmail: string;
+    employeeName: string;
+    serviceName: string;
+    bookingStartDateAndTime: string;
+  };
+  async function sendEmail(emailData: EmailData) {
+    try {
+      const response = await fetch(
+        `/api/sendEmail`,
+        {
+          method: "POST",
+          body: JSON.stringify(emailData),
+        }
+      );
+      const responseData = await response.json();
+      console.log("BOOKING :", responseData);
+    } catch (error: any) {
+      console.log("Email NOT Sent", error);
+    }
+  }
 
   const onSubmit = async () => {
     if (!employeeId) {
@@ -84,7 +107,17 @@ const BookingForm: React.FC = () => {
         }
       );
       const responseData = await response.json(); // Access the response data
-      console.log("RESPONSE DATA: ",responseData);
+      console.log("RESPONSE DATA: ", responseData);
+
+      // Send email after successfully fetching
+      const emailData = {
+        customerEmail,
+        employeeName,
+        serviceName,
+        bookingStartDateAndTime,
+      };
+      await sendEmail(emailData);
+
       router.refresh();
       toast.success(toastMessage);
     } catch (error: any) {
@@ -132,6 +165,7 @@ const BookingForm: React.FC = () => {
         );
         const data = await response.json();
         setService(data);
+        setServiceName(data.name);
       } catch (error) {
         console.error("There was an error!", error);
       }
@@ -179,7 +213,7 @@ const BookingForm: React.FC = () => {
 
       const bookings = async () => {
         try {
-          const data = await getBookings ({
+          const data = await getBookings({
             shiftId: shift?.id,
             employeeId: employeeId,
           });
@@ -267,7 +301,17 @@ const BookingForm: React.FC = () => {
             <label className="text-md font-light">Book Staff</label>
             <Select
               defaultValue={employeeId}
-              onValueChange={(value) => setEmployeeId(value)}
+              onValueChange={(value) => {
+                const selectedEmployee = employees?.find(
+                  (item) => item.id === value
+                );
+                if (selectedEmployee) {
+                  setEmployeeName(
+                    `${selectedEmployee.fName} ${selectedEmployee.lName}`
+                  );
+                  setEmployeeId(value);
+                }
+              }}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select a staff to book in with" />
