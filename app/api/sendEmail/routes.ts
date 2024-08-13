@@ -54,7 +54,7 @@ export async function POST(req: Request) {
     const message = `You have a ${serviceName} appointment with ${employeeName} at ${formattedDate}... SEE YOU THEN!`;
     const msg = {
       to: `${customerEmail}`, // Change to your recipient
-      from: "ziggy-prisoner-of-love-studio@sgreff.com", // Change to your verified sender
+      from: "ziggy@prisoneroflovestudio.com", // Change to your verified sender
       subject: "Confirmation Email",
       text: message,
       html: `<!DOCTYPE html>
