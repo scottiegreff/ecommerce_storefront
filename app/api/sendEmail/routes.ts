@@ -2,39 +2,40 @@ import { NextResponse } from "next/server";
 import sgMail from "@sendgrid/mail";
 import pol from "@/public/images/pol.jpg";
 
-export async function OPTIONS(req: Request) {
-  return NextResponse.json(
-    {},
-    { headers: getCorsHeaders(req.headers.get("Origin")) }
-  );
-}
-// Define allowed origins
-const allowedOrigins = process.env.FRONTEND_STORE_URL;
+// export async function OPTIONS(req: Request) {
+//   return NextResponse.json(
+//     {},
+//     { headers: getCorsHeaders(req.headers.get("Origin")) }
+//   );
+// }
+// // Define allowed origins
+// const allowedOrigins = process.env.FRONTEND_STORE_URL;
 
-// CORS handling function
-function getCorsHeaders(origin: string | null) {
-  const headers: {
-    "Access-Control-Allow-Methods": string;
-    "Access-Control-Allow-Headers": string;
-    "Access-Control-Allow-Origin"?: string;
-  } = {
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  };
+// // CORS handling function
+// function getCorsHeaders(origin: string | null) {
+//   const headers: {
+//     "Access-Control-Allow-Methods": string;
+//     "Access-Control-Allow-Headers": string;
+//     "Access-Control-Allow-Origin"?: string;
+//   } = {
+//     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+//     "Access-Control-Allow-Headers": "Content-Type, Authorization",
+//   };
 
-  if (origin && allowedOrigins?.includes(origin)) {
-    headers["Access-Control-Allow-Origin"] = origin;
-  } else {
-    headers["Access-Control-Allow-Origin"] = "null";
-  }
-  return headers;
-}
+//   if (origin && allowedOrigins?.includes(origin)) {
+//     headers["Access-Control-Allow-Origin"] = origin;
+//   } else {
+//     headers["Access-Control-Allow-Origin"] = "null";
+//   }
+//   return headers;
+// }
 
-export async function POST(
-  req: Request,
- 
-) {
-    console.log("IIIINNNNNN   HHHEEEREERREEEE ",)
+// , {
+//     headers: getCorsHeaders(req.headers.get("Origin")),
+//   }
+
+export async function POST(req: Request) {
+  console.log("IIIINNNNNN   HHHEEEREERREEEE ");
   try {
     const body = await req.json();
     const {
@@ -120,9 +121,7 @@ export async function POST(
         console.error(error);
       });
 
-    return NextResponse.json(email, {
-      headers: getCorsHeaders(req.headers.get("Origin")),
-    });
+    return NextResponse.json(email);
   } catch (error) {
     console.log("[SEND EMAIL]_POST]", error);
     return new NextResponse("Internal error", { status: 500 });
